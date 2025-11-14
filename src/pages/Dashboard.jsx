@@ -5,7 +5,7 @@ import {
     XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
     RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar
 } from 'recharts';
-import axios from 'axios';
+import apiClient from '../config/api';
 import {
     Building2, DollarSign, Wrench, Users, Activity,
     Heart, TrendingUp, AlertCircle, CheckCircle2
@@ -19,10 +19,7 @@ function Dashboard() {
     const { data: overview, isLoading: overviewLoading } = useQuery({
         queryKey: ['dashboard-overview'],
         queryFn: async () => {
-            const token = localStorage.getItem('auth_token');
-            const res = await axios.get('/api/v1/dashboard/overview', {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+            const res = await apiClient.get('/api/v1/dashboard/overview');
             return res.data;
         }
     });
@@ -30,10 +27,7 @@ function Dashboard() {
     const { data: analytics, isLoading: analyticsLoading } = useQuery({
         queryKey: ['detailed-analytics'],
         queryFn: async () => {
-            const token = localStorage.getItem('auth_token');
-            const res = await axios.get('/api/v1/dashboard/detailed-analytics', {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+            const res = await apiClient.get('/api/v1/dashboard/detailed-analytics');
             return res.data;
         }
     });

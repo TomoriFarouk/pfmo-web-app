@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
+import apiClient from '../config/api';
 import { Eye, Download, Filter } from 'lucide-react';
 
 function Submissions() {
@@ -20,10 +20,7 @@ function Submissions() {
             if (filters.lga) params.lga = filters.lga;
             if (filters.syncStatus) params.sync_status = filters.syncStatus;
 
-            const res = await axios.get('/api/v1/submissions/submissions', {
-                headers: { Authorization: `Bearer ${token}` },
-                params
-            });
+            const res = await apiClient.get('/api/v1/submissions/submissions', { params });
             return res.data;
         }
     });

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import apiClient from '../config/api';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 function Login() {
@@ -28,7 +28,7 @@ function Login() {
             formData.append('username', username);
             formData.append('password', password);
 
-            const res = await axios.post('/api/v1/auth/login', formData);
+            const res = await apiClient.post('/api/v1/auth/login', formData);
             localStorage.setItem('auth_token', res.data.access_token);
 
             // Redirect to the page user was trying to access, or dashboard

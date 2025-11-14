@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
+import apiClient from '../config/api';
 import { Brain, AlertTriangle, TrendingUp, Lightbulb, FileText, Search } from 'lucide-react';
 
 function AIInsights() {
@@ -11,9 +11,7 @@ function AIInsights() {
         queryKey: ['at-risk-facilities'],
         queryFn: async () => {
             const token = localStorage.getItem('auth_token');
-            const res = await axios.get('/api/v1/ai/facilities/at-risk', {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+            const res = await apiClient.get('/api/v1/ai/facilities/at-risk');
             return res.data;
         }
     });
@@ -22,9 +20,7 @@ function AIInsights() {
         queryKey: ['ai-recommendations'],
         queryFn: async () => {
             const token = localStorage.getItem('auth_token');
-            const res = await axios.get('/api/v1/ai/recommendations', {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+            const res = await apiClient.get('/api/v1/ai/recommendations');
             return res.data;
         }
     });
@@ -34,9 +30,7 @@ function AIInsights() {
         queryFn: async () => {
             if (!selectedSubmission) return null;
             const token = localStorage.getItem('auth_token');
-            const res = await axios.get(`/api/v1/ai/submission/${selectedSubmission}/insights`, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+            const res = await apiClient.get(`/api/v1/ai/submission/${selectedSubmission}/insights`);
             return res.data;
         },
         enabled: !!selectedSubmission
@@ -47,10 +41,7 @@ function AIInsights() {
 
         try {
             const token = localStorage.getItem('auth_token');
-            const res = await axios.post('/api/v1/ai/analyze-text',
-                { text: searchText },
-                { headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' } }
-            );
+            const res = await apiClient.post('/api/v1/ai/analyze-text', { text: searchText });
             const analysis = res.data;
             alert(`Text Analysis Results:\n\nSentiment: ${analysis.sentiment}\nPriority: ${analysis.priority}\nTopics: ${analysis.topics.join(', ')}\n\nSummary: ${analysis.summary}`);
         } catch (error) {

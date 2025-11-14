@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import axios from 'axios';
+import apiClient from '../config/api';
 import { Plus, Edit, Trash2, Eye, Code, Layout, X, Type, Hash, Calendar, CheckSquare, List, FileText } from 'lucide-react';
 import FormBuilder from '../components/FormBuilder';
 
@@ -22,8 +22,7 @@ function Forms() {
         queryKey: ['forms'],
         queryFn: async () => {
             const token = localStorage.getItem('auth_token');
-            const res = await axios.get('/api/v1/forms/forms', {
-                headers: { Authorization: `Bearer ${token}` },
+            const res = await apiClient.get('/api/v1/forms/forms', {
                 params: { active_only: false }
             });
             // Filter out soft-deleted forms from display
@@ -34,9 +33,7 @@ function Forms() {
     const createFormMutation = useMutation({
         mutationFn: async (formData) => {
             const token = localStorage.getItem('auth_token');
-            const res = await axios.post('/api/v1/forms/create', formData, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+            const res = await apiClient.post('/api/v1/forms/create', formData);
             return res.data;
         },
         onSuccess: () => {
@@ -50,8 +47,7 @@ function Forms() {
         mutationFn: async ({ formId, permanent }) => {
             const token = localStorage.getItem('auth_token');
             try {
-                await axios.delete(`/api/v1/forms/forms/${formId}`, {
-                    headers: { Authorization: `Bearer ${token}` },
+                await apiClient.delete(`/api/v1/forms/forms/${formId}`, {
                     params: { permanent }
                 });
             } catch (error) {
@@ -195,9 +191,7 @@ function Forms() {
 
         try {
             const token = localStorage.getItem('auth_token');
-            await axios.post('/api/v1/forms/create', defaultFormData, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+            await apiClient.post('/api/v1/forms/create', defaultFormData);
             queryClient.invalidateQueries({ queryKey: ['forms'] });
             alert('Default PFMO form created successfully! It will now appear in the mobile app.');
         } catch (error) {

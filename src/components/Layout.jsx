@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import apiClient from '../config/api';
 import {
     LayoutDashboard,
     FileText,
@@ -25,9 +25,7 @@ function Layout() {
             try {
                 const token = localStorage.getItem('auth_token');
                 if (token) {
-                    const res = await axios.get('/api/v1/auth/me', {
-                        headers: { Authorization: `Bearer ${token}` }
-                    });
+                    const res = await apiClient.get('/api/v1/auth/me');
                     setCurrentUser(res.data);
                 }
             } catch (error) {

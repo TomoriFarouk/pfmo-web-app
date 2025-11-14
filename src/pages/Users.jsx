@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import axios from 'axios';
+import apiClient from '../config/api';
 import { Plus, Edit, Trash2, UserPlus } from 'lucide-react';
 
 function Users() {
@@ -20,9 +20,7 @@ function Users() {
         queryKey: ['users'],
         queryFn: async () => {
             const token = localStorage.getItem('auth_token');
-            const res = await axios.get('/api/v1/auth/users', {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+            const res = await apiClient.get('/api/v1/auth/users');
             return res.data;
         },
         retry: false
@@ -31,9 +29,7 @@ function Users() {
     const createUserMutation = useMutation({
         mutationFn: async (userData) => {
             const token = localStorage.getItem('auth_token');
-            const res = await axios.post('/api/v1/auth/register', userData, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+            const res = await apiClient.post('/api/v1/auth/register', userData);
             return res.data;
         },
         onSuccess: () => {
@@ -46,9 +42,7 @@ function Users() {
     const deleteUserMutation = useMutation({
         mutationFn: async (userId) => {
             const token = localStorage.getItem('auth_token');
-            await axios.delete(`/api/v1/auth/users/${userId}`, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+            await apiClient.delete(`/api/v1/auth/users/${userId}`);
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['users'] });
